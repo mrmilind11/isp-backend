@@ -4,11 +4,14 @@
   "description": "Backend project for ISP data maintaining. Built on Node, Express and MongoDB",
   "main": "index.js",
   "scripts": {
+    "start": "node index.js",
+    "devstart": "nodemon index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Milind Sharma",
   "license": "ISC",
   "dependencies": {
+    "cors": "^2.8.5",
     "express": "^4.17.1",
     "joi": "^14.3.1",
     "mongoose": "^5.9.1",
