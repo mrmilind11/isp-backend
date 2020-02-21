@@ -1,1 +1,6 @@
-{}
+{
+    "env": {
+        "PORT": 4000,
+        "mongoDbPw": "sharmajs11"
+    }
+}
