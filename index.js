@@ -8,6 +8,7 @@ app.use(cors());
 
 require('./startup/server')(app);
 require('./startup/db')();
+require('./startup/static')(app);
 require('./startup/route')(app);
 
 app.use(errorMiddleware);
