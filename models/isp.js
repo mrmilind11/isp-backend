@@ -5,7 +5,7 @@ const emailRegex = new RegExp("^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[
 
 const ISPSchema = new mongoose.Schema({
     _id: mongoose.Schema.Types.ObjectId,
-    name: { type: String, required: true, maxlength: 250 },
+    name: { type: String, required: true, maxlength: 250, unique: true },
     lowest_price: { type: Number, required: true, index: true },
     rating: { type: Number, required: true, min: 0, max: 5, validate: /^\d$/, default: 0, index: true },
     max_speed: { type: String, required: true, maxlength: 50 },
@@ -20,7 +20,7 @@ const ISPModel = mongoose.model('isp', ISPSchema, 'isp');
 
 const validateAddISP = function (data) {
     const schema = Joi.object({
-        name: Joi.string().required().max(10),
+        name: Joi.string().required().max(250),
         lowest_price: Joi.number().required(),
         rating: Joi.number().max(5).min(0),
         max_speed: Joi.string().max(50).required(true),

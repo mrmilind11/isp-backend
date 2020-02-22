@@ -5,6 +5,7 @@ module.exports = function (app) {
         res.send('Welcome to ISP app');
     })
     app.use('/api/isp', ISPRoute);
+
     app.get('*', (req, res, next) => {
         next(new ErrorHandler(404, 'Page not found. Please check url'))
     })
