@@ -112,7 +112,7 @@ const download_pdf = async (req, res, next) => {
                 const dr = {
                     name: ispDataJson.name,
                     image: imageData,
-                    price: ispDataJson.price,
+                    price: ispDataJson.lowest_price,
                     max_speed: ispDataJson.max_speed,
                     email: ispDataJson.email,
                     contact_number: ispDataJson.contact_number,
@@ -124,7 +124,7 @@ const download_pdf = async (req, res, next) => {
                     }
                     else {
                         convertHTMLToPDF(html, (pdf) => {
-                            const newFilepath = 'pdf' / ispDataJson.name + '_' + Date.now() + '.pdf'
+                            const newFilepath = 'pdf/' + ispDataJson.name + '_' + Date.now() + '.pdf'
                             fs.writeFile(newFilepath, pdf, (err) => {
                                 if (err) return next(new ErrorHandler(500, err));
                                 res.download(newFilepath);
