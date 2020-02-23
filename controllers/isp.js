@@ -129,6 +129,8 @@ const download_pdf = async (req, res, next) => {
                                 if (err) return next(new ErrorHandler(500, err));
                                 res.download(newFilepath);
                             });
+                        }, (error) => {
+                            return next(new ErrorHandler(500, error));
                         })
                     }
 

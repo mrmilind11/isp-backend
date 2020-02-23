@@ -7,5 +7,6 @@ module.exports = function () {
             console.log('Connected to mongoDB');
         }, (error) => {
             console.log(error);
+            process.exit(1);
         });
 }
