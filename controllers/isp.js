@@ -8,7 +8,6 @@ const setDataForClient = (req, data) => {
     let newData = _.cloneDeep(data.toJSON());
     newData.image = `${req.protocol}://${req.get('host')}/images/${newData.image}`;
     delete newData.__v;
-    console.log('new data', newData);
     return newData;
 }
 const removeImageFromStorage = (imageName) => {
