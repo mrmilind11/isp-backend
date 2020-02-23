@@ -3,6 +3,8 @@ const mongoose = require('mongoose');
 const { ISPModel, validateAddISP } = require('../models/isp');
 const _ = require('lodash');
 const fs = require('fs');
+const ejs = require('ejs');
+const convertHTMLToPDF = require('pdf-puppeteer');
 
 const setDataForClient = (req, data) => {
     let newData = _.cloneDeep(data.toJSON());
@@ -41,8 +43,6 @@ const getQueryAndSortHash = (req) => {
 }
 const get_isp_list = async (req, res, next) => {
     const { queryHash, sortHash } = getQueryAndSortHash(req);
-    console.log('queryHash', queryHash);
-    console.log('sortHash', sortHash);
     try {
         let fetchedISPLIst = await ISPModel.find(queryHash).sort(sortHash);
         const dataToSend = fetchedISPLIst.map((data) => { return setDataForClient(req, data) });
@@ -95,6 +95,52 @@ const delete_isp = async (req, res, next) => {
         next(new ErrorHandler(500, error.message));
     }
 }
+const download_pdf = async (req, res, next) => {
+    let id = req.params.id;
+    if (!id) return next(new ErrorHandler(400, 'No id provided'));
+    if (!mongoose.Types.ObjectId.isValid(id)) return next(new ErrorHandler(400, 'Not a valid id'));
+    try {
+        const ispData = await ISPModel.findById(id);
+        let ispDataJson = _.cloneDeep(ispData);
+        let imageSrc = 'public/images/' + ispDataJson.image;
+        fs.readFile(imageSrc, (err, data) => {
+            if (err) {
+                return next(new ErrorHandler(500, err));
+            }
+            else {
+                let imageData = `data:image/${imageSrc.split('.')[1]};base64,${data.toString('base64')}`;
+                const dr = {
+                    name: ispDataJson.name,
+                    image: imageData,
+                    price: ispDataJson.price,
+                    max_speed: ispDataJson.max_speed,
+                    email: ispDataJson.email,
+                    contact_number: ispDataJson.contact_number,
+                    description: ispDataJson.description
+                }
+                ejs.renderFile('templates/ispDetails.ejs', dr, (err, html) => {
+                    if (err) {
+                        return next(new ErrorHandler(500, err));
+                    }
+                    else {
+                        convertHTMLToPDF(html, (pdf) => {
+                            const newFilepath = 'pdf' / ispDataJson.name + '_' + Date.now() + '.pdf'
+                            fs.writeFile(newFilepath, pdf, (err) => {
+                                if (err) return next(new ErrorHandler(500, err));
+                                res.download(newFilepath);
+                            });
+                        })
+                    }
+
+                })
+            }
+        });
+    }
+    catch (error) {
+        next(new ErrorHandler(500, error.message));
+    }
+}
 module.exports.get_isp_list = get_isp_list;
 module.exports.add_isp = add_isp;
 module.exports.delete_isp = delete_isp;
+module.exports.download_pdf = download_pdf;
