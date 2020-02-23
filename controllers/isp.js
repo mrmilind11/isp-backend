@@ -56,7 +56,7 @@ const get_isp_list = async (req, res, next) => {
 }
 const get_isp_cnt = async (req, res, next) => {
     try {
-        const totalCnt = await ISPModel.find().count();
+        const totalCnt = await ISPModel.find().countDocuments();
         res.send({ 'totalISPCount': totalCnt })
     }
     catch (error) {
