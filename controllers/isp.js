@@ -1,6 +1,7 @@
 const { ErrorHandler } = require('../utils/errorHandler');
 const mongoose = require('mongoose');
 const { ISPModel, validateAddISP } = require('../models/isp');
+const { update_Count } = require('./queryCount');
 const _ = require('lodash');
 const fs = require('fs');
 const ejs = require('ejs');
@@ -20,6 +21,7 @@ const removeImageFromStorage = (imageName) => {
 const getQueryAndSortHash = (req) => {
     let queryHash = {};
     let sortHash = { 'name': 1 };
+    update_Count('getIsp');
     if (req.query && JSON.stringify(req.query) !== '{}') {
         if (req.query.searchText) {
             let orList = [];
@@ -47,6 +49,15 @@ const get_isp_list = async (req, res, next) => {
         let fetchedISPLIst = await ISPModel.find(queryHash).sort(sortHash);
         const dataToSend = fetchedISPLIst.map((data) => { return setDataForClient(req, data) });
         res.send({ 'ispList': dataToSend });
+    }
+    catch (error) {
+        next(new ErrorHandler(500, error.message));
+    }
+}
+const get_isp_cnt = async (req, res, next) => {
+    try {
+        const totalCnt = await ISPModel.find().count();
+        res.send({ 'totalISPCount': totalCnt })
     }
     catch (error) {
         next(new ErrorHandler(500, error.message));
@@ -152,4 +163,5 @@ const download_pdf = async (req, res, next) => {
 module.exports.get_isp_list = get_isp_list;
 module.exports.add_isp = add_isp;
 module.exports.delete_isp = delete_isp;
+module.exports.get_isp_cnt = get_isp_cnt;
 module.exports.download_pdf = download_pdf;
