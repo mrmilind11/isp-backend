@@ -5,7 +5,7 @@ const emailRegex = new RegExp("^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[
 
 const ISPSchema = new mongoose.Schema({
     _id: mongoose.Schema.Types.ObjectId,
-    name: { type: String, required: true, maxlength: 250, unique: true },
+    name: { type: String, required: true, maxlength: 250, unique: true, index: true },
     lowest_price: { type: Number, required: true, index: true },
     rating: { type: Number, required: true, min: 0, max: 5, validate: /^\d$/, default: 0, index: true },
     max_speed: { type: String, required: true, maxlength: 50 },
@@ -15,7 +15,6 @@ const ISPSchema = new mongoose.Schema({
     image: { type: String, maxlength: 1000, required: true },
     url: { type: String, maxlength: 1000, required: true }
 })
-
 const ISPModel = mongoose.model('isp', ISPSchema, 'isp');
 
 const validateAddISP = function (data) {

@@ -15,9 +15,36 @@ const removeImageFromStorage = (imageName) => {
         if (err) console.log('Error in file remove', err);
     });
 }
+const getQueryAndSortHash = (req) => {
+    let queryHash = {};
+    let sortHash = { 'name': 1 };
+    if (req.query && JSON.stringify(req.query) !== '{}') {
+        if (req.query.searchText) {
+            let orList = [];
+            orList.push({ 'name': new RegExp(req.query.searchText, 'ig') });
+            const searchTextInt = parseInt(req.query.searchText);
+            if (!isNaN(searchTextInt)) {
+                orList.push({ 'rating': searchTextInt });
+                orList.push({ 'lowest_price': searchTextInt })
+            }
+            queryHash = { $or: orList };
+        }
+        if (req.query.sortBy) {
+            const sortByMap = { 'price': 'lowest_price', 'rating': 'rating', 'name': 'name' };
+            const sortBy = sortByMap[req.query.sortBy] || 'name';
+            const orderBy = req.query.orderBy === 'DES' ? -1 : 1;
+            sortHash = {};
+            sortHash[sortBy] = orderBy;
+        }
+    }
+    return { queryHash, sortHash };
+}
 const get_isp_list = async (req, res, next) => {
+    const { queryHash, sortHash } = getQueryAndSortHash(req);
+    console.log('queryHash', queryHash);
+    console.log('sortHash', sortHash);
     try {
-        let fetchedISPLIst = await ISPModel.find({}).sort('name');
+        let fetchedISPLIst = await ISPModel.find(queryHash).sort(sortHash);
         const dataToSend = fetchedISPLIst.map((data) => { return setDataForClient(req, data) });
         res.send({ 'ispList': dataToSend });
     }
