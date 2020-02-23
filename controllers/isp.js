@@ -135,7 +135,10 @@ const download_pdf = async (req, res, next) => {
                                 if (err) return next(new ErrorHandler(500, err));
                                 res.download(newFilepath);
                             });
-                        }, undefined, puppeteerArgs);
+                        }, undefined, puppeteerArgs).catch((error) => {
+                            return next(new ErrorHandler(500, error.message));
+                        })
+
                     }
 
                 })
