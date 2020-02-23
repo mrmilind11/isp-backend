@@ -118,6 +118,12 @@ const download_pdf = async (req, res, next) => {
                     contact_number: ispDataJson.contact_number,
                     description: ispDataJson.description
                 }
+                const puppeteerArgs = {
+                    args: [
+                        '--no-sandbox',
+                        '--disable-setuid-sandbox',
+                    ]
+                }
                 ejs.renderFile('templates/ispDetails.ejs', dr, (err, html) => {
                     if (err) {
                         return next(new ErrorHandler(500, err));
@@ -129,9 +135,7 @@ const download_pdf = async (req, res, next) => {
                                 if (err) return next(new ErrorHandler(500, err));
                                 res.download(newFilepath);
                             });
-                        }, (error) => {
-                            return next(new ErrorHandler(500, error));
-                        })
+                        }, undefined, puppeteerArgs);
                     }
 
                 })
