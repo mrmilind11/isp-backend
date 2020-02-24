@@ -1,11 +1,11 @@
-#ISP Server Project
+# ISP Server Project
 This is the server side code for ISP management project. Code is built on Express framework and uses MongoDB for storage purpose.
 This app is useful for storing ISP data, retreiving it and downloading the details in form of pdf.
 
-##Pre-requisite
+## Pre-requisite
 Your system should have npm version >6.x.x and node version > 11.x.x.
 
-##Installation
+## Installation
 * Clone or download the repo from github.
 * Open the folder in terminal
 * Run this to install dependencies  
@@ -14,16 +14,16 @@ Your system should have npm version >6.x.x and node version > 11.x.x.
     ```
 * Pdf generation dependency requires chromium, so it can take time.
 
-##Development Server
+## Development Server
 To start the server locally run :
 ```
 npm run devstart
 ```
 This will start nodemon server on localhost:4000 by default. You can change PORT in nodemon.json file.
 
-##API list
+## API list
 
-###GET ISP List
+### GET ISP List
 * Access point : /api/isp
 * Methods: **GET**
 * Return list of isp queried on the basis of parameters.
@@ -34,13 +34,13 @@ This will start nodemon server on localhost:4000 by default. You can change PORT
 * Example: /api/isp?searchText=Air&sortBy=rating&orderBy=DES
 * Response : { ispList: [] }
 
-###GET Total ISP Count
+### GET Total ISP Count
 * Access point : /api/isp/count
 * Method : **GET**
 * Returns total number of ISP present in DB.
 * Response : { totalISPCount: 0}
 
-###GET Total API Count
+### GET Total API Count
 * Access point: /api/querycount/total
 * Method : **GET**
 * Returns number of time ISP List get API was hit.
@@ -62,7 +62,7 @@ This will start nodemon server on localhost:4000 by default. You can change PORT
     * **max_speed**: String
 * Response : ISP data with updated id in **_id**
 
-###Delete ISP Data
+### Delete ISP Data
 * Access point: /api/isp
 * Method: **DELETE**
 * Delete the ISP document from DB by id provided
@@ -71,12 +71,12 @@ This will start nodemon server on localhost:4000 by default. You can change PORT
 
 * Example : api/isp?id=abcdef12345678
 
-###Download ISP Data as pdf
+### Download ISP Data as pdf
 * Access point: /apo/isp/download/:id
 * Method: **GET**
 * On calling this api with appropriate id, a pdf will be automatically downloaded in browser
 
-##Additional Note
+## Additional Note
 * Some features might not work on heroku deployment:
     * Download as pdf will not work on heroku as chromium dependency gets missing
     * Images of new ISPs are stored in file storage under Public folder. So they can be removed on re-deployment to heroku. This can be resolved by adding cloud bucket like Amazon S3, google cloude storage.
