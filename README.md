@@ -46,7 +46,7 @@ This will start nodemon server on localhost:4000 by default. You can change PORT
 * Returns number of time ISP List get API was hit.
 * Response : { totalCount: 0}
 
-###POST ISP Data
+### POST ISP Data
 * Access point: /api/isp
 * Method: **POST**
 * Add new ISP to the DB
