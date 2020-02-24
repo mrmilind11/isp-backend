@@ -72,7 +72,7 @@ This will start nodemon server on localhost:4000 by default. You can change PORT
 * Example : api/isp?id=abcdef12345678
 
 ### Download ISP Data as pdf
-* Access point: /apo/isp/download/:id
+* Access point: /api/isp/download/:id
 * Method: **GET**
 * On calling this api with appropriate id, a pdf will be automatically downloaded in browser
 
