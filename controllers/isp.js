@@ -141,7 +141,10 @@ const download_pdf = async (req, res, next) => {
                     }
                     else {
                         convertHTMLToPDF(html, (pdf) => {
-                            const newFilepath = 'pdf/' + ispDataJson.name + '_' + Date.now() + '.pdf'
+                            const newFilepath = 'pdf/' + ispDataJson.name + '_' + Date.now() + '.pdf';
+                            if (!fs.existsSync('pdf')) {
+                                fs.mkdirSync('pdf');
+                            }
                             fs.writeFile(newFilepath, pdf, (err) => {
                                 if (err) return next(new ErrorHandler(500, err));
                                 res.download(newFilepath);
