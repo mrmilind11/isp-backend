@@ -21,7 +21,6 @@ const removeImageFromStorage = (imageName) => {
 const getQueryAndSortHash = (req) => {
     let queryHash = {};
     let sortHash = { 'name': 1 };
-    update_Count('getIsp');
     if (req.query && JSON.stringify(req.query) !== '{}') {
         if (req.query.searchText) {
             let orList = [];
@@ -45,6 +44,7 @@ const getQueryAndSortHash = (req) => {
 }
 const get_isp_list = async (req, res, next) => {
     const { queryHash, sortHash } = getQueryAndSortHash(req);
+    update_Count('getIsp');
     try {
         let fetchedISPLIst = await ISPModel.find(queryHash).sort(sortHash);
         const dataToSend = fetchedISPLIst.map((data) => { return setDataForClient(req, data) });
